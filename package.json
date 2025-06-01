@@ -1,0 +1,21 @@
+{
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "better-sqlite3": "^11.10.0",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "sqlite3": "^5.1.7"
+  },
+  "name": "customer_manager",
+  "version": "1.0.0",
+  "description": "customer relation manager",
+  "main": "server.js",
+  "scripts": {
+    "test": "npm start",
+    "dev": "nodemon server.js",
+    "start":"node server.js"
+  },
+  "author": "frank",
+  "license": "ISC"
+}

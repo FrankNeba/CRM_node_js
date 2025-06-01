@@ -1,0 +1,15 @@
+require('dotenv').config()
+const express = require('express')
+const authRoutes = require('./api/routes/authRoutes')
+const customerRoutes = require('./api/routes/customerRoutes')
+const interactionRoutes = require('./api/routes/interactionRoutes')
+const opportunityRoute = require('./api/routes/opportunityRoute')
+
+const app = express()
+app.use(express.json())
+app.use('/api', authRoutes)
+app.use('/api', customerRoutes)
+app.use('/api', interactionRoutes)
+app.use('/api', opportunityRoute)
+
+app.listen(3000, () => console.log('server runniing'))
