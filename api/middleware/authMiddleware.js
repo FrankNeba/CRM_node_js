@@ -1,20 +1,29 @@
-const jwt = require('jsonwebtoken')
-const {findUser} = require('../models/userModel')
+// middleware/authMiddleware.js
+import jwt from 'jsonwebtoken';
+import { findUser } from '../models/userModel.js';
 
-const authenticationToken = (req, res, next) => {
-    const token = req.headers['authorization']?.split(' ')[1]
+export const authenticationToken = async (req, res, next) => {
+  try {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader?.split(' ')[1];
+
     if (!token) {
-        return res.status(401).json({Unauthorized: 'Access denied, User not authenticated'})
+      return res.status(401).json({ error: 'Access denied, user not authenticated' });
     }
 
-    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-        if (err) return res.status(403).json({Unauthorized: 'Invalid Token'})
-        const tUser = findUser(user.username)
-        if (tUser.id != user.id) return res.status(403).json({Unauthorized: 'Invalid Token'})
-        req.user = user
-        console.log(user)
-        next()
-    })
-}
+    jwt.verify(token, process.env.JWT_SECRET, async (err, userPayload) => {
+      if (err) return res.status(403).json({ error: 'Invalid token' });
 
-module.exports = authenticationToken
+      const dbUser = await findUser(userPayload.username);
+      if (!dbUser || dbUser.id !== userPayload.id) {
+        return res.status(403).json({ error: 'Invalid token' });
+      }
+
+      req.user = userPayload;
+      next();
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};

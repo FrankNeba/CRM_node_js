@@ -1,42 +1,34 @@
-const db = require('../config/db')
+import db from '../config/db.js'
 
-const createInteraction = (type, date, note, id ) => {
-console.log(type);
-console.log(date);
-console.log(note);
-console.log(id);
-   const stmt = db.prepare('insert into interactions (type, date, notes, customer_id ) values (?,?,?,?)')
-   console.log('hi')
-   stmt.run(type, date, note, id )
+export const createInteraction = (type, date, note, id) => {
+    console.log(type)
+    console.log(date)
+    console.log(note)
+    console.log(id)
+
+    const stmt = db.prepare('INSERT INTO interactions (type, date, notes, customer_id) VALUES (?, ?, ?, ?)')
+    console.log('hi')
+    stmt.run(type, date, note, id)
 }
 
-const getAllInteractions = () => {
-    return db.prepare('select * from interactions').all()
+export const getAllInteractions = () => {
+    return db.prepare('SELECT * FROM interactions').all()
 }
 
-const getInteractionByEmail =(email) => {
-    return db.prepare('select * from interactions where email = ?').get(email)
+export const getInteractionByEmail = (email) => {
+    return db.prepare('SELECT * FROM interactions WHERE email = ?').get(email)
 }
 
-const getInteractionById =(id) => {
-    return db.prepare('select * from interactions where id = ?').get(id)
+export const getInteractionById = (id) => {
+    return db.prepare('SELECT * FROM interactions WHERE id = ?').get(id)
 }
 
-const updateInteraction = (type, date, note,customer_id, id ) => {
-    return db.prepare('update interactions set type = ?, date = ?, notes = ?, customer_id = ? where id = ?').run(type, date, note,customer_id, id )
+export const updateInteraction = (type, date, note, customer_id, id) => {
+    return db.prepare(
+        'UPDATE interactions SET type = ?, date = ?, notes = ?, customer_id = ? WHERE id = ?'
+    ).run(type, date, note, customer_id, id)
 }
 
-const deleteInteraction = (id) => {
-    return db.prepare('delete from interactions where id = ?').run(id)
-}
-
-
-
-module.exports = {
-    createInteraction,
-    getAllInteractions,
-    getInteractionByEmail,
-    getInteractionById,
-    updateInteraction,
-    deleteInteraction,
+export const deleteInteraction = (id) => {
+    return db.prepare('DELETE FROM interactions WHERE id = ?').run(id)
 }

@@ -1,17 +1,13 @@
-const db = require('../config/db')
+import db from '../config/db.js'
 
-const createUser = (email, passwordHash) => {
-    const stmt = db.prepare('Insert into users (email, password) values (?,?)')
-    stmt.run(email, passwordHash)
-
+export const createUser = (email, passwordHash) => {
+  const stmt = db.prepare('INSERT INTO users (email, password) VALUES (?, ?)')
+  stmt.run(email, passwordHash)
 }
 
-const findUser = (email) => {
-    console.log(email)
-    const stmt = db.prepare('select * from users where email = ?')
-    console.log(stmt)
-    return stmt.get(email)
+export const findUser = (email) => {
+  console.log(email)
+  const stmt = db.prepare('SELECT * FROM users WHERE email = ?')
+  console.log(stmt)
+  return stmt.get(email)
 }
-
-
-module.exports = {createUser, findUser}

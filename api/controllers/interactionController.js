@@ -1,81 +1,77 @@
-const {
-        createInteraction,
-        getAllInteractions,
-        getInteractionByEmail,
-        getInteractionById,
-        updateInteraction,
-        deleteInteraction,
-    } = require('../models/interactionModel')
+// controllers/interactionController.js
+import {
+  createInteraction,
+  getAllInteractions,
+  getInteractionByEmail,
+  getInteractionById,
+  updateInteraction,
+  deleteInteraction
+} from '../models/interactionModel.js';
 
+export const newInteraction = (req, res) => {
+  try {
+    const { type, date, notes, customer_id } = req.body;
+    createInteraction(type, date, notes, customer_id);
+    res.status(201).json({ message: `Interaction "${type}" created successfully` });
+  } catch (err) {
+    console.error(err);
+    res.status(400).json({ error: err.message });
+  }
+};
 
-const newInteraction = (req, res) => {
-    try{
-        console.log('hello')
-        const {type, date, notes, customer_id} = req.body
-        console.log('hello1')
-        createInteraction(type, date, notes, customer_id)
-        res.status(201).json({message: `Interaction ${type} created successfully`})
+export const editInteraction = (req, res) => {
+  try {
+    const { type, date, notes, customer_id } = req.body;
+    const id = req.params.id;
+    const interaction = updateInteraction(type, date, notes, customer_id, id);
+    res.status(200).json({
+      message: 'Interaction updated successfully',
+      data: interaction
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(400).json({ error: err.message });
+  }
+};
+
+export const allInteractions = (req, res) => {
+  try {
+    const data = getAllInteractions();
+    res.status(200).json(data);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+export const singleInteraction = (req, res) => {
+  try {
+    const id = req.params.id;
+    const data = getInteractionById(id);
+    if (!data) {
+      return res.status(404).json({ error: 'Interaction not found' });
     }
-    catch(err){
-        console.log(err)
-        res.status(400).json({error: err.message})
+    return res.status(200).json(data);
+  } catch (err) {
+    console.error(err);
+    return res.status(400).json({ error: err.message });
+  }
+};
+
+export const searchInteraction = (req, res) => {
+  res.status(501).json({ message: 'Search not implemented yet' });
+};
+
+export const deleteInteractionDetails = (req, res) => {
+  try {
+    const id = req.params.id;
+    const result = deleteInteraction(id);
+    if (result.changes === 0) {
+      return res.status(404).json({ error: 'Interaction does not exist' });
     }
-    
-    
-}
-
-const editInteraction = (req, res) => {
-    try{
-        const {type, date, notes, customer_id} = req.body
-        const id = req.params.id
-        const Interaction = updateInteraction(type, date, notes, customer_id, id)
-        return res.status(201).json({message:'Interaction updated successflly', data: Interaction})
-    } 
-    catch(err){
-        console.log(err)
-        res.status(400).json({err:err.message})
-    }
-}
-
-const allInteractions = (req,res) => {
-    const data = getAllInteractions()
-    return res.status(200).json( data)
-}
-
-const singleInteraction = (req, res) => {
-    try {
-        const id = req.params.id
-        const data = getInteractionById(id)
-        if (!data) {
-            return res.status(404).json({error: 'user not found'})
-        }
-        return res.status(200).json( data)
-    }
-    catch(err){
-        console.log(err)
-        return res.status(400).json({error: err.message})
-    }
-}
-
-const searchInteraction = (req, res) => {}
-
-const deleteInteractionDetails = (req, res) => {
-    const id = req.params.id
-    const result = deleteInteraction(id)
-    if (result.changes === 0){
-        return res.status(404).json({error: 'Interaction does not exists'})
-    }
-
-    res.json({message: result.changes})
-
-}
-
-
-module.exports = {
-    newInteraction,
-    editInteraction,
-    allInteractions,
-    singleInteraction,
-    deleteInteractionDetails,
-}
-    
+    res.json({ message: 'Interaction deleted successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(400).json({ error: err.message });
+  }
+};

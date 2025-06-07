@@ -1,37 +1,26 @@
-const db = require('../config/db')
+import db from '../config/db.js'
 
-const createCustomer = (email, name, phone) => {
-   const stmt = db.prepare('insert into customers (email, name, phone) values (?,?,?)')
-   stmt.run(email, name, phone)
-}
+export const createCustomer = (email, name, phone) => {
+   const stmt = db.prepare('INSERT INTO customers (email, name, phone) VALUES (?, ?, ?)');
+   stmt.run(email, name, phone);
+};
 
-const getAllCustomers = () => {
-    return db.prepare('select * from customers').all()
-}
+export const getAllCustomers = () => {
+   return db.prepare('SELECT * FROM customers').all();
+};
 
-const getCustomerByEmail =(email) => {
-    return db.prepare('select * from customers where email = ?').get(email)
-}
+export const getCustomerByEmail = (email) => {
+   return db.prepare('SELECT * FROM customers WHERE email = ?').get(email);
+};
 
-const getCustomerById =(id) => {
-    return db.prepare('select * from customers where id = ?').get(id)
-}
+export const getCustomerById = (id) => {
+   return db.prepare('SELECT * FROM customers WHERE id = ?').get(id);
+};
 
-const updateCustomer = (email, name, phone, id) => {
-    return db.prepare('update customers set name = ?, email = ?, phone = ? where id = ?').run(name, email, phone, id)
-}
+export const updateCustomer = (email, name, phone, id) => {
+   return db.prepare('UPDATE customers SET name = ?, email = ?, phone = ? WHERE id = ?').run(name, email, phone, id);
+};
 
-const deleteCustomer = (id) => {
-    return db.prepare('delete from customers where id = ?').run(id)
-}
-
-
-
-module.exports = {
-    createCustomer,
-    getAllCustomers,
-    getCustomerByEmail,
-    getCustomerById,
-    updateCustomer,
-    deleteCustomer,
-}
+export const deleteCustomer = (id) => {
+   return db.prepare('DELETE FROM customers WHERE id = ?').run(id);
+};
